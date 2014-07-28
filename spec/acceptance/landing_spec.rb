@@ -17,4 +17,17 @@ feature "Landing Page" do
     page.should have_content "Edit: #{list_name}"
     current_url.should =~ /#\/lists\/1/
   end
+
+  scenario "create new list", :js => true do
+    visit '/'
+
+    fill_in "listName", with: "Awesome new list"
+    click_button "Add"
+
+    within "table#lists" do
+      page.should have_content "Awesome new list"
+    end
+
+    find_field("listName").value.should be_empty
+  end
 end
