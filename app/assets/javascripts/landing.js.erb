@@ -3,19 +3,6 @@ var page = angular.module('project', ['ngRoute']);
 page.factory("NotificationsService", function() {
   var source = new EventSource('/api/notifications/lists');
 
-  source.addEventListener('open', function(e) {
-    console.log("open", e);
-  }, false);
-
-  source.addEventListener('error', function(e) {
-    if (e.eventPhase == EventSource.CLOSED) {
-      // Connection was closed.
-      console.log("closed");
-    } else {
-      console.log("error", e);
-    }
-  }, false);
-
   return {
     addListener: function(event, fn) {
       source.addEventListener(event, function(e) {
