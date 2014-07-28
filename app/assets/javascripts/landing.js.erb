@@ -1,8 +1,18 @@
 var page = angular.module('project', ['ngRoute']);
 
+page.factory('ListsRepository', function () {
+  return {
+    query: function() {
+      return [
+        { id: 1, name: "Quick-List Features Current Sprint" },
+        { id: 2, name: "Quick-List Features Next Sprint" }
+      ];
+    }
+  }
+});
 
-page.controller('IndexCtrl', function() {
-
+page.controller('IndexCtrl', function($scope, ListsRepository) {
+  $scope.lists = ListsRepository.query();
 });
 
 page.config(function($routeProvider) {
