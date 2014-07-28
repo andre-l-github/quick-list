@@ -1,5 +1,22 @@
-<div class="row" ng-repeat="list in lists">
+<div class="row">
   <div class="col-lg-12">
-    <h3>{{list.name}}</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Open Items</th>
+          <th>Closed Items</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody ng-repeat="list in lists">
+        <tr>
+          <td><a href="#lists/{{list.id}}">{{list.name}}</a></td>
+          <td>{{list.open}}</td>
+          <td>{{list.closed}}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

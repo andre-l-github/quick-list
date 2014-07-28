@@ -4,9 +4,12 @@ page.factory('ListsRepository', function () {
   return {
     query: function() {
       return [
-        { id: 1, name: "Quick-List Features Current Sprint" },
-        { id: 2, name: "Quick-List Features Next Sprint" }
+        { id: 1, name: "Quick-List Features Current Sprint", closed: 5, open: 10 },
+        { id: 2, name: "Quick-List Features Next Sprint", closed: 0, open: 4 }
       ];
+    },
+    get: function(id) {
+      return this.query()[id - 1];
     }
   }
 });
@@ -15,11 +18,19 @@ page.controller('IndexCtrl', function($scope, ListsRepository) {
   $scope.lists = ListsRepository.query();
 });
 
+page.controller('EditCtrl', function($scope, $routeParams, ListsRepository) {
+  $scope.list = ListsRepository.get($routeParams.id);
+});
+
 page.config(function($routeProvider) {
   $routeProvider
     .when('/', {
       controller:'IndexCtrl',
       templateUrl: '<%= asset_path("landing/index.html") %>'
+    })
+    .when('/lists/:id', {
+      controller:'EditCtrl',
+      templateUrl: '<%= asset_path("landing/edit.html") %>'
     })
     .otherwise({
       redirectTo:'/'
