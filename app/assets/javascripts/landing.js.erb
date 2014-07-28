@@ -1,10 +1,44 @@
 var page = angular.module('project', ['ngRoute']);
 
-page.factory('ListsRepository', function () {
+page.factory("NotificationsService", function() {
+  var source = new EventSource('/api/notifications/lists');
+
+  source.addEventListener('open', function(e) {
+    console.log("open", e);
+  }, false);
+
+  source.addEventListener('error', function(e) {
+    if (e.eventPhase == EventSource.CLOSED) {
+      // Connection was closed.
+      console.log("closed");
+    } else {
+      console.log("error", e);
+    }
+  }, false);
+
+  return {
+    addListener: function(event, fn) {
+      source.addEventListener(event, function(e) {
+        fn($.parseJSON(e.data));
+      });
+    }
+  };
+});
+
+page.factory('ListsRepository', function (NotificationsService) {
+  var listeners = [];
   var database = [
     { id: 1, name: "Quick-List Features Current Sprint", closed: 5, open: 10 },
     { id: 2, name: "Quick-List Features Next Sprint", closed: 0, open: 4 }
   ];
+
+  NotificationsService.addListener("created", function(newList) {
+    database.push(newList);
+    $.each(listeners, function(idx, listener) {
+      listener();
+    });
+  });
+
   return {
     query: function() {
       return database;
@@ -15,13 +49,20 @@ page.factory('ListsRepository', function () {
     create: function(params) {
       var base = { id: database.length + 1, closed: 0, open: 0 }
       database.push($.extend(base, params));
+    },
+    addListener: function(fn) {
+      listeners.push(fn);
     }
   }
 });
 
 page.controller('IndexCtrl', function($scope, ListsRepository) {
   $scope.lists = ListsRepository.query();
-
+  ListsRepository.addListener(function() {
+    $scope.$apply(function() {
+      $scope.lists = ListsRepository.query();
+    });
+  });
   $scope.create = function() {
     ListsRepository.create({ name: $scope.list.name });
     $scope.list.name = "";

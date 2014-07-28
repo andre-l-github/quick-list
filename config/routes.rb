@@ -2,6 +2,10 @@ Rails.application.routes.draw do
 
   resource :landing
 
+  namespace :api do
+    resources :notifications
+  end
+
   root 'landing#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
