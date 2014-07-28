@@ -29,4 +29,6 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'guard-rspec'
   gem 'rb-fsevent' if `uname` =~ /Darwin/
+  gem 'capybara-webkit'
+  gem 'headless'
 end

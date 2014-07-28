@@ -1,0 +1,17 @@
+var page = angular.module('project', ['ngRoute']);
+
+
+page.controller('IndexCtrl', function() {
+
+});
+
+page.config(function($routeProvider) {
+  $routeProvider
+    .when('/', {
+      controller:'IndexCtrl',
+      templateUrl: '<%= asset_path("landing/index.html") %>'
+    })
+    .otherwise({
+      redirectTo:'/'
+    });
+});
