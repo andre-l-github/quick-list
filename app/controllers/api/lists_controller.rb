@@ -7,5 +7,13 @@ module Api
     def show
       render json: List.first
     end
+
+    def create
+      list = List.create!(params[:list].permit(:name))
+
+      PushNotification.publish "lists", "created", list.to_json
+
+      render json: list
+    end
   end
 end
