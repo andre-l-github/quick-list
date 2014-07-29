@@ -5,9 +5,14 @@ class ApplicationController < ActionController::Base
 
   after_filter :set_csrf_cookie_for_ng
 
+  rescue_from Mongoid::Errors::DocumentNotFound do |e|
+    render text: "404 not found", status: 404
+  end
+
   def set_csrf_cookie_for_ng
     cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
   end
+
 
 protected
 

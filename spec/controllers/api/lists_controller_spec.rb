@@ -16,9 +16,17 @@ describe Api::ListsController do
   end
 
   describe "#show" do
-    before { get :show, id: lists.last.id }
+    context "list exists" do
+      before { get :show, id: lists.last.id }
 
-    it { expect(response.body).to eq(serialized(lists.last)) }
+      it { expect(response.body).to eq(serialized(lists.last)) }
+    end
+
+    context "list does not exist" do
+      before { delete :destroy, id: lists.first.id.to_s.next }
+
+      it { expect(response.status).to eq(404) }
+    end
   end
 
   describe "#create" do
@@ -29,6 +37,22 @@ describe Api::ListsController do
     it { expect(List.count).to eq(3) }
 
     it { expect(List.last.name).to eq("A new List") }
+  end
+
+  describe "#destroy" do
+    context "list exists" do
+      before { delete :destroy, id: lists.first.id }
+
+      it { expect(List.count).to eq(1) }
+    end
+
+    context "list does not exist" do
+      before { delete :destroy, id: lists.first.id.to_s.next }
+
+      it { expect(List.count).to eq(2) }
+
+      it { expect(response.status).to eq(404) }
+    end
   end
 
   def serialized(resource, options={})
