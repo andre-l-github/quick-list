@@ -1,21 +1,24 @@
 require 'acceptance_helper'
 
 feature "Landing Page" do
-
-  let(:list_name) { "Quick-List Features Current Sprint" }
+  let!(:lists) do
+    List.create!([
+      { name: "Quick-List Features Current Sprint" }
+    ])
+  end
 
   scenario "shows all todo lists", :js => true do
     visit '/'
     page.should have_content('Welcome to Quick-List')
 
-    page.should have_content(list_name)
+    page.should have_content(lists.first.name)
     page.should have_content('Open Items')
     page.should have_content('Closed Items')
 
-    click_link list_name
+    click_link lists.first.name
 
-    page.should have_content "Edit: #{list_name}"
-    current_url.should =~ /#\/lists\/1/
+    page.should have_content "Edit: #{lists.first.name}"
+    current_url.should =~ /#\/lists\/#{lists.first.id.to_s}/
   end
 
   scenario "create new list", :js => true do
@@ -43,7 +46,9 @@ feature "Landing Page" do
       page.should_not have_content "A pushed list"
     end
 
-    PushNotification.publish "lists", "created", { id: 2, name: "A pushed list", open: 0, closed: 1 }
+    list = List.create!({ name: "A pushed list" })
+
+    PushNotification.publish "lists", "created", list.to_json
 
     within "table#lists" do
       page.should have_content "A pushed list"
