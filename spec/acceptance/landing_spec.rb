@@ -59,9 +59,8 @@ feature "Landing Page" do
       page.should_not have_content "A pushed list"
     end
 
-    list = List.create!({ name: "A pushed list" })
-
-    PushNotification.publish "lists", "created", list.to_json
+    # List creation triggers Server Side Event
+    List.create!({ name: "A pushed list" })
 
     within "table#lists" do
       page.should have_content "A pushed list"
