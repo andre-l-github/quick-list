@@ -28,6 +28,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     arel (5.0.1.20140414130214)
+    bson (2.3.0)
     builder (3.2.2)
     capybara (2.2.1)
       mime-types (>= 1.16)
@@ -50,6 +51,8 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.1)
+    connection_pool (2.0.0)
+    database_cleaner (1.2.0)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.2.1)
@@ -86,9 +89,20 @@ GEM
     mime-types (1.25.1)
     mini_portile (0.5.2)
     minitest (5.4.0)
+    mongoid (4.0.0)
+      activemodel (~> 4.0)
+      moped (~> 2.0.0)
+      origin (~> 2.1)
+      tzinfo (>= 0.3.37)
+    moped (2.0.0)
+      bson (~> 2.2)
+      connection_pool (~> 2.0)
+      optionable (~> 0.2.0)
     multi_json (1.10.1)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
+    optionable (0.2.0)
+    origin (2.1.1)
     polyglot (0.3.5)
     pry (0.9.12.6)
       coderay (~> 1.0)
@@ -187,10 +201,12 @@ PLATFORMS
 DEPENDENCIES
   capybara-puma
   coffee-rails (~> 4.0.0)
+  database_cleaner
   guard-rspec
   headless
   jbuilder (~> 2.0)
   jquery-rails
+  mongoid
   puma
   rails (= 4.1.1)
   redis
