@@ -10,22 +10,20 @@ module Api
     end
 
     def create
-      list = List.create!(params[:list].permit(:name))
-
-      PushNotification.publish "lists", "created", list.to_json
-
-      render json: list
+      render json: List.create!(params[:list].permit(:name))
     end
 
     def destroy
       resource.destroy
 
-      PushNotification.publish "lists", "destroyed", resource.to_json
-
       render json: resource
     end
 
   private
+
+    def serialize(res)
+      ListSerializer.new(res).as_json
+    end
 
     def resource
       @resource ||= List.find(params[:id])

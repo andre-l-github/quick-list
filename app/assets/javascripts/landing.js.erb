@@ -1,7 +1,7 @@
 var page = angular.module('project', ['ngRoute', 'ngResource']);
 
 page.factory("NotificationsService", function() {
-  var source = new EventSource('/api/notifications/lists');
+  var source = new EventSource('/api/notifications/list');
 
   return {
     addListener: function(events, fn) {
