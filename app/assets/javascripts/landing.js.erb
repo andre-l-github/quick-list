@@ -12,9 +12,8 @@ page.factory("NotificationsService", function() {
   };
 });
 
-var Repository = function($service, $notifications) {
-  this.notifications = $notifications;
-  this.service       = $service;
+var Repository = function($service) {
+  this.service = $service;
 
   this.query = function(fn) {
     this.service.query(fn);
@@ -29,33 +28,25 @@ var Repository = function($service, $notifications) {
   }
 };
 
-page.factory('ListsRepository', function ($resource, NotificationsService) {
-  var service    = $resource('/api/lists/:id', { id: '@id' });
-  var repository = new Repository(service, NotificationsService);
-  var listeners = [];
-
-  NotificationsService.addListener("created", function(newList) {
-    $.each(listeners, function(idx, listener) {
-      listener();
-    });
-  });
-
-  return $.extend(repository, {
-    addListener: function(fn) {
-      listeners.push(fn);
-    }
-  });
+page.factory('ListsService', function($resource) {
+  return $resource('/api/lists/:id', { id: '@id' });
 });
 
-page.controller('IndexCtrl', function($scope, ListsRepository) {
+page.factory('ListsRepository', function (ListsService) {
+  return new Repository(ListsService);
+});
+
+page.controller('IndexCtrl', function($scope, ListsRepository, NotificationsService) {
   ListsRepository.query(function(data) {
     $scope.lists = data;
   });
-  ListsRepository.addListener(function() {
+
+  NotificationsService.addListener("created", function(newList) {
     ListsRepository.query(function(data) {
       $scope.lists = data;
     });
   });
+
   $scope.create = function() {
     ListsRepository.create({ name: $scope.list.name });
     $scope.list.name = "";
