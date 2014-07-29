@@ -20,6 +20,8 @@ module Api
     def destroy
       resource.destroy
 
+      PushNotification.publish "lists", "destroyed", resource.to_json
+
       render json: resource
     end
 

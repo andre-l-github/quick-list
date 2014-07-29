@@ -22,11 +22,11 @@
         </tr>
       </thead>
       <tbody ng-repeat="list in lists">
-        <tr>
+        <tr data-id="{{list.id}}">
           <td><a href="#lists/{{list.id}}">{{list.name}}</a></td>
           <td>{{list.open}}</td>
           <td>{{list.closed}}</td>
-          <td></td>
+          <td><a href="" ng-click="destroy(list.id)">Delete</a></td>
         </tr>
       </tbody>
     </table>

@@ -4,9 +4,12 @@ page.factory("NotificationsService", function() {
   var source = new EventSource('/api/notifications/lists');
 
   return {
-    addListener: function(event, fn) {
-      source.addEventListener(event, function(e) {
-        fn($.parseJSON(e.data));
+    addListener: function(events, fn) {
+      var eventArray = events instanceof Array ? events : [events];
+      $.each(eventArray, function(idx, event) {
+        source.addEventListener(event, function(e) {
+          fn(event, $.parseJSON(e.data));
+        });
       });
     }
   };
@@ -25,7 +28,7 @@ page.controller('IndexCtrl', function($scope, ListsRepository, NotificationsServ
     $scope.lists = data;
   });
 
-  NotificationsService.addListener("created", function(newList) {
+  NotificationsService.addListener(["created", "destroyed"], function(event, newList) {
     ListsRepository.query(function(data) {
       $scope.lists = data;
     });
@@ -34,7 +37,15 @@ page.controller('IndexCtrl', function($scope, ListsRepository, NotificationsServ
   $scope.create = function() {
     ListsRepository.create({ name: $scope.list.name });
     $scope.list.name = "";
-  }
+  };
+
+  $scope.destroy = function(id) {
+    $scope.lists = $.grep($scope.lists, function(list, idx) {
+      return list.id != id;
+    });
+
+    ListsRepository.destroy(id);
+  };
 });
 
 page.controller('EditCtrl', function($scope, $routeParams, ListsRepository) {

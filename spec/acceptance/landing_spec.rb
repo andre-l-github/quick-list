@@ -34,6 +34,18 @@ feature "Landing Page" do
     find_field("listName").value.should be_empty
   end
 
+  scenario "destroy existing list", :js => true do
+    visit '/'
+
+    find('tr', text: lists.last.name).tap do |row|
+      row.find_link("Delete").click
+    end
+
+    List.all.should be_empty
+
+    page.should_not have_content(lists.first.name)
+  end
+
   scenario "update lists from push notification", :js => true do
     visit "/"
 
