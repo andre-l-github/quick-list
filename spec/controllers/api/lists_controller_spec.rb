@@ -16,9 +16,9 @@ describe Api::ListsController do
   end
 
   describe "#show" do
-    before { get :show, id: lists.first.id }
+    before { get :show, id: lists.last.id }
 
-    it { expect(response.body).to eq(serialized(lists.first)) }
+    it { expect(response.body).to eq(serialized(lists.last)) }
   end
 
   describe "#create" do

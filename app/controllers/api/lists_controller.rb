@@ -5,7 +5,7 @@ module Api
     end
 
     def show
-      render json: List.first
+      render json: List.find(params[:id])
     end
 
     def create
