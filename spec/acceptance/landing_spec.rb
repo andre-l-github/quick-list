@@ -3,7 +3,8 @@ require 'acceptance_helper'
 feature "Landing Page" do
   let!(:lists) do
     List.create!([
-      { name: "Quick-List Features Current Sprint" }
+      { name: "Quick-List Features Current Sprint" },
+      { name: "Quick-List Features Next Sprint" }
     ])
   end
 
@@ -41,9 +42,9 @@ feature "Landing Page" do
       row.find_link("Delete").click
     end
 
-    List.all.should be_empty
+    List.all.size.should == lists.size - 1
 
-    page.should_not have_content(lists.first.name)
+    page.should_not have_content(lists.last.name)
   end
 
   scenario "update lists from push notification", :js => true do
